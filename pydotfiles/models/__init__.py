@@ -850,7 +850,6 @@ def get_module_names(config_repo_local):
     return [module_name for module_name in os.listdir(config_repo_local) if os.path.isdir(os.path.join(config_repo_local, module_name)) and module_name != ".git"]
 
 
-
 """
 Helper functions
 """
