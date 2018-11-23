@@ -1,13 +1,16 @@
 # General build settings
 sudo: false
 dist: trusty
-language: node_js
+language: python
+python:
+  - "3.6"
 
 env:
-  - GIT_AUTHOR_NAME="Jason Yao"
-  - GIT_AUTHOR_EMAIL="Hello@JasonYao.com"
-  - GIT_COMMITTER_NAME="Jason Yao"
-  - GIT_COMMITTER_EMAIL="Hello@JasonYao.com"
+  global:
+    - GIT_AUTHOR_NAME="Jason Yao"
+    - GIT_AUTHOR_EMAIL="Hello@JasonYao.com"
+    - GIT_COMMITTER_NAME="Jason Yao"
+    - GIT_COMMITTER_EMAIL="Hello@JasonYao.com"
 
 # Notification settings
 notifications:
@@ -18,13 +21,22 @@ notifications:
     on_success: change
     on_failure: change
 
+before_script:
+  - bin/install_dependencies
+
 script:
   # Runs through the test suite
   - bin/lint
 
-## We only run the tests and deployment checks if the build succeeded
-#after_success:
-#  # Deployment steps (on success & on the correct branch)
-#  - bin/deploy
-#  branch:
-#    - master
+after_success:
+  - bin/generate-release
+
+# We only do a release to pypi if the tests pass and we're on the master branch
+deploy:
+  provider: pypi
+  user: "JasonYao"
+  password:
+    secure: QoB5+3ePh600uHaWjA2jXJ88mUv1TpJQ5q2Osqpand4w1JDdM/wo4hEmp2FI4WwSLyqMhU/dM9pbRnRHpknxIjvtDQXipAbMU/C4c+H4TOVGoWg9vV+/C1WpMtzoWQ3W+OtrzMjj8ei/xMZlEpulGmoNpbp/JHyV255keSMA1ksqzue9xNvD5LjZD6OC2IpPlfhIUtIa3UxTXNYnBvnmqQDVkEThJSLaUmDzjNEqtyI+0+Sadl0GgovsWRNVGbZJZqADDQ5QN1coJH7iRRfccXYi3L3T4C7PyeFUYddBz/LHPJH/fiq0lDHAk855wU9vey2urVA9HTbnTFp3y6C5kYq9egWTVrTiaOyiPC1ieFtK3v+ExoK4mcKaATBJWTsdYk36YnT8DPmhTS7Brrzl6oUjSw1OCvrl5aVe+YpXMiOAEumvpAujk1NVHvTbLPgYoq1pcAAHG7ElBP0Z6sPziDPICwYsORoUHSaocxI9BSnuOvm2M5Cl/gHoj5+ISyJECWROCZomWmDVirLuBguQddDJOrzllgTMxsUHfbYMDCV7Y0N4rIFtSRIBuQa6tzW/bcjfWnq42PPOFZiDQQoWpUu3z4VcjVr7QYTRRIjoFtqzSqD9cVD1mqP1yRaG/AGg0OltUcfvZWupOOU2v3Pk/NQ4i9HT47FoQcNRt8KmVhI=
+  distributions: "sdist bdist_wheel"
+  branch:
+    - master
