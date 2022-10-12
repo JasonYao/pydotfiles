@@ -1,12 +1,11 @@
-# PyDotfiles | Extendable Configuration-based Python Dotfile Manager
-By [Jason Yao](https://github.com/JasonYao).
+# pydotfiles | Extendable Configuration-based Python Dotfile Manager
 [![Build Status](https://travis-ci.org/JasonYao/pydotfiles.svg?branch=master)](https://travis-ci.org/JasonYao/pydotfiles)
 [![PyPI version](https://badge.fury.io/py/pydotfiles.svg)](https://badge.fury.io/py/pydotfiles)
 [![Python 3.6+](https://img.shields.io/badge/python-3.6+-blue.svg)](https://www.python.org/downloads/release/python-360/)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 [![License](https://img.shields.io/github/license/jasonyao/pydotfiles.svg)](LICENSE)
 
-PyDotfiles is an extendable and configurable dotfile manager written in python.
+pydotfiles is an extendable and configurable dotfile manager written in python.
 It will configure your computer exactly the way that you want, and through the
 configuration system, means that people can have their own personalized environment
 by just editing configuration files, with no need to dive into the code to make it
