@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
 import sys
-from pydotfiles.api import ArgumentDispatcher
+from pydotfiles.api import ArgumentDispatcherFacade
 
 
-def main(args):
-    dispatcher = ArgumentDispatcher(args)
+def main(args: list[str]):
+    dispatcher = ArgumentDispatcherFacade(args)
     dispatcher.dispatch()
 
 

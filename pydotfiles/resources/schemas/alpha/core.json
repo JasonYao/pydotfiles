@@ -1,7 +1,7 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
     "type": "object",
-    "definitions": {
+    "$defs": {
         "OperatingSystemType": {
             "type": "object",
             "properties": {
@@ -10,6 +10,9 @@
                 },
                 "shell": {
                     "enum": ["bash", "zsh"]
+                },
+                "package_manager": {
+                    "enum": ["yum", "apt", "brew"]
                 },
                 "packages": {
                     "type": "array",
@@ -29,11 +32,18 @@
                         "type": "string"
                     }
                 },
-                "default_settings_file": {
-                    "type": "string"
+                "default_settings_files": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 }
             },
-            "required": ["name"]
+            "required": ["name"],
+            "dependentSchemas": {
+                "packages": { "required": ["package_manager"] },
+                "applications": { "required": ["package_manager"] }
+            }
         },
         "ActionType": {
             "type": "object",
@@ -72,43 +82,7 @@
         "ActionsType": {
             "type": "array",
             "items": {
-                "$ref": "#/definitions/ActionType"
-            }
-        },
-        "EnvironmentType": {
-            "type": "object",
-            "properties": {
-                "language": {
-                    "enum": ["python", "ruby", "java"]
-                },
-                "versions": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "environment_manager": {
-                    "type": "object",
-                    "properties": {
-                        "name": {
-                            "type": "string"
-                        },
-                        "plugins": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    },
-                    "required": ["name"]
-                }
-            },
-            "required": ["language", "versions"]
-        },
-        "EnvironmentsType": {
-            "type": "array",
-            "items": {
-                "$ref": "#/definitions/EnvironmentType"
+                "$ref": "#/$defs/ActionType"
             }
         }
     },
@@ -119,15 +93,16 @@
         {
             "properties": {
                 "os": {
-                    "$ref": "core.json#/definitions/OperatingSystemType"
+                    "$ref": "core.json#/$defs/OperatingSystemType"
                 },
                 "actions": {
-                    "$ref": "core.json#/definitions/ActionsType"
+                    "$ref": "core.json#/$defs/ActionsType"
                 },
-                "environments": {
-                    "$ref": "core.json#/definitions/EnvironmentsType"
+                "profile": {
+                    "type": "string"
                 }
-            }
+            },
+            "required": ["profile"]
         }
     ]
 }

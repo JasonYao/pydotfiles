@@ -1,0 +1,30 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "$defs": {
+        "Profiles": {
+            "type": "object",
+             "patternProperties": {
+                 ".{1,}": {
+                     "type": "array",
+                     "items": {
+                         "type": "string"
+                     }
+                 }
+             }
+        }
+    },
+    "allOf": [
+        {
+            "$ref": "./common.json"
+        },
+        {
+            "properties": {
+                "profiles": {
+                    "$ref": "manifest.json#/$defs/Profiles"
+                }
+            },
+            "required": ["profiles"]
+        }
+    ]
+}

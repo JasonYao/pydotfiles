@@ -1,14 +1,18 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
     "type": "object",
-    "definitions": {
+    "$defs": {
         "MacVersion": {
             "enum": [
                 "yosemite",
                 "el_capitan",
                 "sierra",
                 "high_sierra",
-                "mojave"
+                "mojave",
+                "catalina",
+                "big_sur",
+                "monterey",
+                "ventura"
             ]
         },
          "DefaultSettingType": {
@@ -25,10 +29,10 @@
                     "type": "string"
                 },
                 "start": {
-                    "$ref": "#/definitions/MacVersion"
+                    "$ref": "#/$defs/MacVersion"
                 },
                 "end": {
-                    "$ref": "#/definitions/MacVersion"
+                    "$ref": "#/$defs/MacVersion"
                 },
                 "check_command": {
                     "type": "string"
@@ -53,7 +57,7 @@
         "DefaultSettingsType": {
             "type": "array",
             "items": {
-                "$ref": "#/definitions/DefaultSettingType"
+                "$ref": "#/$defs/DefaultSettingType"
             }
         }
     },
@@ -64,7 +68,7 @@
         {
             "properties": {
                 "default_settings": {
-                    "$ref": "default_settings.json#/definitions/DefaultSettingsType"
+                    "$ref": "default_settings.json#/$defs/DefaultSettingsType"
                 }
             }
         }
