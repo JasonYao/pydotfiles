@@ -1,7 +1,7 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
     "type": "object",
-    "definitions": {
+    "$defs": {
         "VirtualEnvironment": {
             "type": "object",
             "properties": {
@@ -23,7 +23,7 @@
                 "virtual_environments": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/VirtualEnvironment"
+                        "$ref": "#/$defs/VirtualEnvironment"
                     }
                 }
             },
@@ -32,7 +32,7 @@
         "Plugins": {
             "type": "array",
             "items": {
-                "$ref": "#/definitions/Plugin"
+                "$ref": "#/$defs/Plugin"
             }
         },
         "EnvironmentManager": {
@@ -42,7 +42,7 @@
                     "type": "string"
                 },
                 "plugins": {
-                    "$ref": "#/definitions/Plugins"
+                    "$ref": "#/$defs/Plugins"
                 }
             },
             "required": ["name"]
@@ -60,7 +60,7 @@
                     }
                 },
                 "environment_manager": {
-                    "$ref": "#/definitions/EnvironmentManager"
+                    "$ref": "#/$defs/EnvironmentManager"
                 }
             },
             "required": ["language", "versions"]
@@ -69,7 +69,7 @@
         "EnvironmentsType": {
             "type": "array",
             "items": {
-                "$ref": "#/definitions/EnvironmentType"
+                "$ref": "#/$defs/EnvironmentType"
             }
         }
     },
@@ -80,9 +80,13 @@
         {
             "properties": {
                 "environments": {
-                    "$ref": "developer_environments.json#/definitions/EnvironmentsType"
+                    "$ref": "developer_environments.json#/$defs/EnvironmentsType"
+                },
+                "profile": {
+                    "type": "string"
                 }
-            }
+            },
+            "required": ["profile"]
         }
     ]
 }

@@ -106,7 +106,7 @@ function mac_install_pyenv_environment() {
         info "Pyenv Environment: Missing pyenv environment variables"
         {
             echo "# Pydotfiles: Automatically set pyenv settings"
-            echo "export PYENV_ROOT=/usr/local/var/pyenv"
+            echo "export PYENV_ROOT=$HOME/.pyenv"
             echo "if which pyenv > /dev/null; then eval \"\$(pyenv init -)\"; fi"
             echo "if which pyenv-virtualenv-init > /dev/null; then eval \"\$(pyenv virtualenv-init -)\"; fi"
         } >> ~/.bash_profile
