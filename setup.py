@@ -46,8 +46,6 @@ setup(
         'Source': 'https://github.com/JasonYao/pydotfiles',
     },
 
-    # package_data={'core': ['resources/*.ini']},
-
     # Installation dependencies below
     install_requires=[
         'PyYAML>=3.13',
@@ -58,7 +56,7 @@ setup(
     ],
 
     scripts=['pydotfiles/bin/pydotfiles'],
-    zip_safe=True,
+    zip_safe=False,
     python_requires='>=3.6',
     extra_require={
         'dev': [
