@@ -73,7 +73,7 @@ def template_copy_file(origin: Path, destination: Path) -> str:
     if [[ -f {destination} ]]; then
         info "Copy: File already exists in {destination}"
     else
-        if cp {origin} {destination} ; then
+        if mkdir -p {destination.parent} && cp {origin} {destination} ; then
             success "Copy: Successfully copied file {origin} to {destination}"
         else
             fail "Copy: Failed to copy file {origin} to {destination}"
@@ -93,7 +93,7 @@ def template_symlink_file(origin: Path, destination: Path, use_sudo: bool) -> st
     if [[ -L {destination} ]]; then
         info "Symlink: File already exists in {destination}"
     else
-        if {'sudo ' if use_sudo else ''}ln -s {origin} {destination} ; then    
+        if {'sudo ' if use_sudo else ''}mkdir -p {destination.parent} && {'sudo ' if use_sudo else ''}ln -s {origin} {destination} ; then    
             success "Symlink: Successfully symlinked {origin} to {destination}"
         else
             fail "Symlink: Failed to symlink {origin} to {destination}"

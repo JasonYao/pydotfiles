@@ -168,16 +168,12 @@ def get_jenv_installation_template(active_os: OSName) -> str:
 def get_jenv_linux_installation_template() -> str:
     return r"""
     git clone https://github.com/jenv/jenv.git ~/.jenv
-    echo 'export PATH="$HOME/.jenv/bin:$PATH"' >> ~/.bash_profile
-    echo 'eval "$(jenv init -)"' >> ~/.bash_profile
     """
 
 
 def get_jenv_macos_installation_template() -> str:
     return r"""
-    brew install jenv
-    echo 'export PATH="$HOME/.jenv/bin:$PATH"' >> ~/.bash_profile
-    echo 'eval "$(jenv init -)"' >> ~/.bash_profile
+    # brew install jenv
     """
 
 ##
@@ -199,7 +195,7 @@ def template_dev_env_manager_plugins_installation(data: Environment) -> str:
 
 def get_pyenv_virtualenv_installation_template() -> str:
     return r"""
-        function pyenv_install_pyenv_virtualenv() {
+    function pyenv_install_pyenv_virtualenv() {
         info "Pyenv-virtualenv: Checking for pyenv-virtualenv installation"
         if [[ $(brew list | grep "pyenv-virtualenv") == "" ]]; then
             info "Pyenv-virtualenv: Missing pyenv-virtualenv package, installing now"
@@ -212,6 +208,7 @@ def get_pyenv_virtualenv_installation_template() -> str:
             success "Pyenv-virtualenv: Pyenv-virtualenv is already installed"
         fi
     }
+    pyenv_install_pyenv_virtualenv
     """
 
 
@@ -271,13 +268,14 @@ def template_dev_env_manager_version_installation(data: Environment) -> str:
 def get_pyenv_version_install_template(data: Environment) -> str:
     versions_to_install = f"python_base_versions=({' '.join(data.versions)})\n"
     base_installation_driver = r"""
-    function pyenv_install_base_environments() {{
+    function pyenv_install_base_environments() {
         info "Pyenv Base Environment: Checking that all pyenv base environments are installed"
         for version in "${python_base_versions[@]}"; do
             pyenv_install_single_base_environment "${version}"
         done
         success "Pyenv Base Environment: All pyenv base environments look good"
-    }}
+    }
+    pyenv_install_base_environments
     """
 
     pyenv_installation_functions = r"""

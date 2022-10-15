@@ -9,6 +9,7 @@ from os import walk as os_walk
 from os import path as os_path
 from dataclasses import dataclass
 from shutil import copy2 as shutil_copy2
+from os import chmod as os_chmod
 
 # Project imports
 from pydotfiles.v4.common import Configuration
@@ -263,6 +264,7 @@ class PackageBuilder:
     def write_init(self) -> None:
         with self.installation_script.open('a') as init_fp:
             init_fp.write(f"#!/usr/bin/env bash\n\n# Fails on the first error\nset -e\n\n{template_starter_helper_functions()}")
+        os_chmod(self.installation_script, 0o744)
 
     def write_tail(self) -> None:
         with self.installation_script.open('a') as init_fp:

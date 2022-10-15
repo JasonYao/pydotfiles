@@ -32,21 +32,32 @@ def __template_yum_packages(data: OperatingSystem) -> str:
 
 
 def __template_homebrew_packages(data: OperatingSystem) -> str:
-    homebrew_packages = f"homebrew_packages = ({' '.join(data.packages)})\n"
-
-    setup = f"""
-    # TODO: move this into config
-    # Any packages that requires flags upon
-    # install should be both above and here
-    declare -A flagged_packages
-    flagged_packages[grep]=--with-default-names
-    flagged_packages[gnu-sed]=--with-default-names
-    flagged_packages[gnu-tar]=--with-default-names
-
-    tmp_homebrew_cache_file=$(mktemp /tmp/pydotfiles-homebrew-cache)
-    """
+    homebrew_packages = f"homebrew_packages=({' '.join(data.packages)})\n"
 
     install_function = r"""
+    # Historically before 2019, Homebrew allowed the use of flags when installing packages,
+    # such as using `brew install grep --with-default-names`. With Homebrew 2, this has gone
+    # away, and we rely instead on gnubin as written here: https://stackoverflow.com/a/60063337
+
+    tmp_homebrew_cache_file=/tmp/pydotfiles-homebrew-cache
+    if [[ ! -f /tmp/pydotfiles-homebrew-cache ]]; then
+        tmp_homebrew_cache_file=$(mktemp /tmp/pydotfiles-homebrew-cache)
+    fi
+    
+    # chown's the homebrew /usr/local directory since otherwise this issue pops up:
+    # https://github.com/Homebrew/legacy-homebrew/issues/44938
+    if [[ $(ls -alh /usr/local | grep share) == "" ]]; then
+        success "Brew: Ownership of homebrew packages and applications is already owned by the user"
+    else
+        info "Brew: An issue was detected where the ownership of homebrew packages and applications was set to root instead of $USER. Executing a chown now."        
+        if sudo chown -R $USER /usr/local/share ; then
+            success "Brew: Ownership of homebrew packages and applications is now set to $USER"
+        else
+            fail "Brew: Ownership of homebrew packages and applications failed to be fixed"
+        fi
+    fi
+
+    
     function check_homebrew_package() {
         package_name=$1
 
@@ -91,11 +102,11 @@ def __template_homebrew_packages(data: OperatingSystem) -> str:
         check_homebrew_package "${package}"
     done
     """
-    return homebrew_packages + setup + install_function
+    return homebrew_packages + install_function
 
 
 def __template_apt_packages(data: OperatingSystem) -> str:
-    apt_packages = f"apt_packages = ({' '.join(data.packages)})\n"
+    apt_packages = f"apt_packages=({' '.join(data.packages)})\n"
 
     package_installation_function = r"""
     function check_and_install_package () {
@@ -178,7 +189,7 @@ def __template_yum_applications(data: OperatingSystem) -> str:
 
 
 def __template_homebrew_applications(data: OperatingSystem) -> str:
-    cask_applications = f"cask_packages = ({' '.join(data.applications)})\n"
+    cask_applications = f"cask_packages=({' '.join(data.applications)})\n"
 
     install_function = r"""
     function check_homebrew_cask_package() {
@@ -186,7 +197,7 @@ def __template_homebrew_applications(data: OperatingSystem) -> str:
 
         if [[ $(grep "${cask_name}" "${tmp_homebrew_cache_file}") == "" ]]; then
             info "Homebrew-Cask: Application ${cask_name} has not been installed yet, installing now"
-            if brew cask install "${cask_name}" &> /dev/null ; then
+            if brew install "${cask_name}" --cask &> /dev/null ; then
                 success "Homebrew Casks: Application ${cask_name} is now installed"
             else
                 fail "Homebrew Casks: Application ${cask_name} failed to install"
@@ -235,6 +246,21 @@ def template_os_default_dock(data: OperatingSystem) -> str:
     valid_apps=("launchpad" "Notes" "iTunes" "appstore" "systempreferences" "firefox")
     """
 
+    dock_setting_function = r"""
+    function check_and_manage_dock_apps() {
+        app_name=$1
+        if [[ $(defaults read com.apple.Dock persistent-apps | grep "${app_name}") == "" ]]; then
+            info "Dock: ${app_name} is not set on the dock, setting now"
+            defaults write com.apple.dock persistent-apps -array-add \
+                "<dict><key>tile-data</key><dict><key>file-data</key><dict><key>_CFURLString</key><string>/Applications/$1.app</string><key>_CFURLStringType</key><integer>0</integer></dict></dict></dict>"
+            success "Dock: ${app_name} is now set on the dock"
+        else
+            success "Dock: ${app_name} is already set on the dock"
+        fi
+    }
+
+    """
+
     repopulate_function = """
     function repopulate_all_dock_apps() {
     """
@@ -248,7 +274,7 @@ def template_os_default_dock(data: OperatingSystem) -> str:
     }
     """
 
-    return header + valid_apps + repopulate_function + r"""
+    return header + valid_apps + dock_setting_function + repopulate_function + r"""
     # Does this once instead of doing all over each time
     invert_string="grep -v"
 
@@ -302,13 +328,13 @@ def template_os_default_setting(data: DefaultSettings) -> str:
     """
 
     command_check = f"""
-    {f'if [[ {data.check_command} == {data.expected_check_state} ]]; then' if data.check_output else ''}
+    {f'if [[ $({data.check_command}) == "{data.expected_check_state}" ]]; then' if data.check_output else ''}
     {f'    success "{data.name}: Successfully completed previously"' if data.check_output else ''}
     {f'else' if data.check_output else ''}
 
     {f'    if {"sudo " if data.sudo else ""}{data.command} ; then'}
     {f'        success "{data.name}: Successfully executed command"'}    
-    {f'        {data.post_command}'}
+    {f'        {"" if data.post_command is None else data.post_command}'}
     {f'    else'}
     {f'        warn "{data.name}: Failed to complete"'}
     {f'    fi'}
