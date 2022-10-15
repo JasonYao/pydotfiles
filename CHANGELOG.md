@@ -1,5 +1,12 @@
 # Changelog | Pydotfiles
 
+## [4.0.1](https://github.com/JasonYao/pydotfiles/compare/v4.0.0...v4.0.1) (2022-10-15)
+
+
+### Bug Fixes
+
+* **build:** fixes build command by including schema files ([fca71f3](https://github.com/JasonYao/pydotfiles/commit/fca71f3e4380412ce273c8653a354748d2557965))
+
 # [4.0.0](https://github.com/JasonYao/pydotfiles/compare/v3.1.0...v4.0.0) (2022-10-15)
 
 
