@@ -31,7 +31,9 @@ function fail () {
 	printf "\\t\\033[2K  [\\033[0;31mFAIL\\033[0m] %s\\n" "${1}"
 }
 
-if [[ "${TRAVIS_BRANCH}" == "master" ]]; then
+BRANCH_NAME=$1
+
+if [[ "${BRANCH_NAME}" == "master" ]]; then
     info "Release: Master branch detected, updating the version number and generating a new release"
     # Updates the version number, generates a new release, and uploads to github
     npx semantic-release

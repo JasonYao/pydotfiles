@@ -66,7 +66,7 @@ setup(
             'autopep8',
 
             # Tests
-            'pyest',
+            'pytest',
             'pytest-pep8',
             'pytest-cov',
         ],

@@ -503,4 +503,3 @@ class PackageBuilder:
         dev_environment_setup = template_dev_environment_setup(data, self.active_os)
         with self.installation_script.open('a') as install_fp:
             install_fp.write(dev_environment_setup)
-

@@ -36,7 +36,7 @@ function fail () {
 function start() {
 	if [[ "$(uname -s)" == "Darwin" ]]; then
 		mac_setup
-		# shellcheck disable=SC1090
+		# shellcheck disable=SC1090,SC1091
 		source "$HOME/.bash_profile"
 	else
     # Fuck Windows
@@ -111,7 +111,7 @@ function mac_install_pyenv_environment() {
             echo "if which pyenv-virtualenv-init > /dev/null; then eval \"\$(pyenv virtualenv-init -)\"; fi"
         } >> ~/.bash_profile
 
-        # shellcheck disable=SC1090
+        # shellcheck disable=SC1090,SC1091
         source "${HOME}/.bash_profile"
         success "Pyenv Environment: Successfully added in pyenv environment variables"
     else
