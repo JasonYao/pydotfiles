@@ -1,5 +1,18 @@
 # Changelog | Pydotfiles
 
+# [4.0.0](https://github.com/JasonYao/pydotfiles/compare/v3.1.0...v4.0.0) (2022-10-15)
+
+
+### Features
+
+* **build:** adds in dotfile profiles, and ability to generate stand-alone build packages ([9000a65](https://github.com/JasonYao/pydotfiles/commit/9000a6550d096aea69a4b66fc84b8a675012aa06))
+
+
+### BREAKING CHANGES
+
+* **build:** Introduces dramatically different execution model from the original pydotfiles live
+process/live update to an offline build package generation approach
+
 # [3.1.0](https://github.com/JasonYao/pydotfiles/compare/v3.0.0...v3.1.0) (2019-02-15)
 
 
