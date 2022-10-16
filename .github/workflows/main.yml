@@ -1,6 +1,9 @@
 name: Build and deploy to PyPI
 
 on:
+  push:
+    branches:
+      - master
   schedule:
     # Runs on the 1st of every month at 4PM
     - cron: "0 16 1 * *"
