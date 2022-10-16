@@ -74,7 +74,7 @@ jobs:
       - name: Publish package
         # Per https://github.com/marketplace/actions/pypi-publish?version=v1.5.1#usage,
         # We want to only upload packages that are a tagged commit
-        if: github.ref == 'refs/heads/master' && ${{ steps.current_version.outputs.current_version }} != ${{ steps.new_version.outputs.new_version }}
+        if: github.ref == 'refs/heads/master' && (steps.current_version.outputs.current_version != steps.new_version.outputs.new_version)
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           password: ${{ secrets.PYPI_API_TOKEN }}
