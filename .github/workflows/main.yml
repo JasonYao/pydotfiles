@@ -52,7 +52,7 @@ jobs:
         run: pip install -e .
 
       - name: Extracts the current deployment version number
-        run: echo "##[set-output name=current_version;]$(cat pydotfiles/version.py | cut -d'"' -f 2)"
+        run: echo "##[set-output name=current_version;]$(cut -d'"' -f 2 < pydotfiles/version.py)"
         id: current_version
 
 #      # We comment all our tests here since a large portion of new code is going through separate codepaths,
@@ -66,7 +66,7 @@ jobs:
 
 
       - name: Extracts the new deployment version number
-        run: echo "##[set-output name=new_version;]$(cat pydotfiles/version.py | cut -d'"' -f 2)"
+        run: echo "##[set-output name=new_version;]$(cut -d'"' -f 2 < pydotfiles/version.py)"
         id: new_version
 
       - run: echo "🔎 The current version is ${{ steps.current_version.outputs.current_version }} and the new version is ${{ steps.new_version.outputs.new_version }}."

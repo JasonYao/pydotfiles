@@ -3,7 +3,7 @@
 # Fails on the first error
 set -e
 
-current_release_version_number="$(cat pydotfiles/version.py | cut -d'"' -f 2)"
+current_release_version_number="$(cut -d'"' -f 2 < pydotfiles/version.py)"
 
 new_release_version_number=$1
 if [[ ${new_release_version_number} == v* ]]; then  # True if $new_release_version_number starts with 'v'
