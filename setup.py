@@ -19,6 +19,11 @@ setup(
     url="https://github.com/JasonYao/pydotfiles",
     packages=find_packages(exclude=("bin", "build", "dist", "git", "pydotfiles.egg-info")),
     include_package_data=True,
+    package_data={
+        '': [
+            "**/*.json"
+        ],
+    },
     classifiers=[
         # How mature is this project? Common values are
         #   3 - Alpha
