@@ -1,5 +1,12 @@
 # Changelog | Pydotfiles
 
+## [4.0.3](https://github.com/JasonYao/pydotfiles/compare/v4.0.2...v4.0.3) (2022-10-16)
+
+
+### Bug Fixes
+
+* **build:** fixes json schema missing from distribution ([0f30e88](https://github.com/JasonYao/pydotfiles/commit/0f30e88117cf7960b9f69034233c50eaa186b7bd))
+
 ## [4.0.2](https://github.com/JasonYao/pydotfiles/compare/v4.0.1...v4.0.2) (2022-10-16)
 
 
