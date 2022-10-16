@@ -1,5 +1,12 @@
 # Changelog | Pydotfiles
 
+## [4.0.2](https://github.com/JasonYao/pydotfiles/compare/v4.0.1...v4.0.2) (2022-10-16)
+
+
+### Bug Fixes
+
+* **build:** adds in non-path json schema resolver to enable build command to work for pip install ([34f0721](https://github.com/JasonYao/pydotfiles/commit/34f0721674346c3bebd8bf49e5ce271cb20b1348))
+
 ## [4.0.1](https://github.com/JasonYao/pydotfiles/compare/v4.0.0...v4.0.1) (2022-10-15)
 
 
