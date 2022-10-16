@@ -1,20 +1,13 @@
 # General imports
 from typing import Dict, Any
-from pkg_resources import resource_stream, resource_filename
-from json import load as json_load
 from pathlib import Path
 from logging import getLogger
-from json import dumps
-
-# 3rd party imports
-from jsonschema import validate as schema_validate, RefResolver
-from jsonschema.exceptions import ValidationError
 
 # Project imports
 from pydotfiles.v4.common import get_configuration_version
 from pydotfiles.v4.common import Configuration
-from pydotfiles.v4.common.alpha import Environment, AlphaCore, AlphaDeveloperEnvironments, AlphaDefaultSettings, \
-    DefaultSettings
+from pydotfiles.v4.common.alpha import AlphaCore, AlphaDefaultSettings, DefaultSettings
+from pydotfiles.v4.validator.alpha import AlphaValidator
 
 logger = getLogger(__name__)
 
@@ -24,6 +17,7 @@ logger = getLogger(__name__)
 
 
 def validate(raw_data: Dict) -> list[Configuration]:
+
     validated_data = {file_path: file_data for file_path, file_data in raw_data.items() if __validate_configuration(file_path, file_data)}
     mapped_data = [Configuration(file_path, __map_data(file_data)) for file_path, file_data in validated_data.items()]
     joined_data = __join_dev_data(mapped_data)
@@ -42,45 +36,15 @@ def validate(raw_data: Dict) -> list[Configuration]:
 
 
 def __validate_configuration(file_path: Path, file_data: Dict) -> bool:
-    if file_data is None:
-        return False
-
-    # Isolates for which version we need to get
-    version: str = file_data.get("version")
-    if version is None:
-        return False
-
-    # Isolates for which schema type we need to get
-    schema_type: str = file_data.get("schema")
-    if schema_type is None:
-        return False
-
-    # Retrieves the required schema
-    schema = __get_schema(version, schema_type)
-
-    # We need a custom resolver since we're referencing other schemas
-    # For more information, see https://stackoverflow.com/a/53968771
-    resolver = __get_resolver(version, schema_type)
-
-    # Validates the given data to the schema
-    try:
-        schema_validate(file_data, schema, resolver=resolver)
-        logger.debug(f"Validation: Successfully validated file: {file_path} using schema: pydotfiles.resources.schemas.{version}.{schema_type}")
-        return True
-    except ValidationError:
-        logger.exception(f"Error when attempting to validate configuration file:\n{file_data}\n")
-        return False
+    validator = get_validator(file_data)
+    return validator.validate(file_path, file_data)
 
 
-def __get_schema(version: str, schema: str) -> Dict:
-    schema_file = resource_stream(f"pydotfiles.resources.schemas.{version}", f"{schema}.json")
-    return json_load(schema_file)
-
-
-def __get_resolver(version: str, schema: str) -> RefResolver:
-    schema_file_name = resource_filename(f"pydotfiles.resources.schemas.{version}", f"{schema}.json")
-    schema_file_path = Path(schema_file_name)
-    return RefResolver(f"file://{str(schema_file_path.parent)}/", None)
+def get_validator(data: dict):
+    """
+    We only support alpha for now
+    """
+    return AlphaValidator()
 
 
 def __map_data(validated_data: Dict) -> Any:

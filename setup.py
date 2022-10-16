@@ -4,6 +4,10 @@ import pydotfiles
 with open("README.md", "r") as readme_file:
     long_description = readme_file.read()
 
+##
+# If I ever come back to this and get confused about all the packaging stuff,
+# just refer back to here: https://stackoverflow.com/a/58941536
+##
 setup(
     name="pydotfiles",
     version=pydotfiles.__version__,
@@ -14,6 +18,7 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/JasonYao/pydotfiles",
     packages=find_packages(exclude=("bin", "build", "dist", "git", "pydotfiles.egg-info")),
+    include_package_data=True,
     classifiers=[
         # How mature is this project? Common values are
         #   3 - Alpha
@@ -53,6 +58,7 @@ setup(
         'GitPython>=2.1.11',
         'progressbar2>=3.38.0',
         'dataclasses;python_version<"3.7"',
+        'importlib_resources; python_version < "3.9"',
     ],
 
     scripts=['pydotfiles/bin/pydotfiles'],

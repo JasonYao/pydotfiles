@@ -1,5 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "alpha.manifest.json",
     "type": "object",
     "$defs": {
         "Profiles": {
@@ -16,12 +17,12 @@
     },
     "allOf": [
         {
-            "$ref": "./common.json"
+            "$ref": "alpha.common.json"
         },
         {
             "properties": {
                 "profiles": {
-                    "$ref": "manifest.json#/$defs/Profiles"
+                    "$ref": "#/$defs/Profiles"
                 }
             },
             "required": ["profiles"]

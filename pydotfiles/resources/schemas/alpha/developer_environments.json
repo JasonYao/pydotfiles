@@ -1,5 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "alpha.developer_environments.json",
     "type": "object",
     "$defs": {
         "VirtualEnvironment": {
@@ -75,12 +76,12 @@
     },
     "allOf": [
         {
-            "$ref": "./common.json"
+            "$ref": "alpha.common.json"
         },
         {
             "properties": {
                 "environments": {
-                    "$ref": "developer_environments.json#/$defs/EnvironmentsType"
+                    "$ref": "#/$defs/EnvironmentsType"
                 },
                 "profile": {
                     "type": "string"

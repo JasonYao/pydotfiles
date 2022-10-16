@@ -1,5 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "alpha.core.json",
     "type": "object",
     "$defs": {
         "OperatingSystemType": {
@@ -88,15 +89,15 @@
     },
     "allOf": [
         {
-            "$ref": "./common.json"
+            "$ref": "alpha.common.json"
         },
         {
             "properties": {
                 "os": {
-                    "$ref": "core.json#/$defs/OperatingSystemType"
+                    "$ref": "#/$defs/OperatingSystemType"
                 },
                 "actions": {
-                    "$ref": "core.json#/$defs/ActionsType"
+                    "$ref": "#/$defs/ActionsType"
                 },
                 "profile": {
                     "type": "string"

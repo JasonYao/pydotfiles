@@ -1,5 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "alpha.default_settings.json",
     "type": "object",
     "$defs": {
         "MacVersion": {
@@ -63,12 +64,12 @@
     },
     "allOf": [
         {
-            "$ref": "./common.json"
+            "$ref": "alpha.common.json"
         },
         {
             "properties": {
                 "default_settings": {
-                    "$ref": "default_settings.json#/$defs/DefaultSettingsType"
+                    "$ref": "#/$defs/DefaultSettingsType"
                 }
             }
         }
