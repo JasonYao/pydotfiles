@@ -51,6 +51,10 @@ jobs:
       - name: Install project dependencies
         run: pip install -e .
 
+      - name: Extracts the current deployment version number
+        run: echo "##[set-output name=current_version;]$(cat pydotfiles/version.py | cut -d'"' -f 2)"
+        id: current_version
+
 #      # We comment all our tests here since a large portion of new code is going through separate codepaths,
 #      # and we have better things to do than to update unit tests for legacy codepaths
 #      - name: Run tests
@@ -60,10 +64,17 @@ jobs:
       - name: Generate release (wheels)
         run: bin/generate-release ${{ steps.extract_branch.outputs.branch }}
 
+
+      - name: Extracts the new deployment version number
+        run: echo "##[set-output name=new_version;]$(cat pydotfiles/version.py | cut -d'"' -f 2)"
+        id: new_version
+
+      - run: echo "🔎 The current version is ${{ steps.current_version.outputs.current_version }} and the new version is ${{ steps.new_version.outputs.new_version }}."
+
       - name: Publish package
         # Per https://github.com/marketplace/actions/pypi-publish?version=v1.5.1#usage,
         # We want to only upload packages that are a tagged commit
-        if: github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/master' && ${{ steps.current_version.outputs.current_version }} == ${{ steps.new_version.outputs.new_version }}
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           password: ${{ secrets.PYPI_API_TOKEN }}
