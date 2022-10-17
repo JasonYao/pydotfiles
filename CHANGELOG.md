@@ -1,5 +1,12 @@
 # Changelog | Pydotfiles
 
+## [4.2.3](https://github.com/JasonYao/pydotfiles/compare/v4.2.2...v4.2.3) (2022-10-17)
+
+
+### Bug Fixes
+
+* **symlinks:** fixes symlinks to point to the correct absolute path ([2468975](https://github.com/JasonYao/pydotfiles/commit/2468975967874364466fce5427f0a9aec6f57f76)), closes [#86](https://github.com/JasonYao/pydotfiles/issues/86)
+
 ## [4.2.2](https://github.com/JasonYao/pydotfiles/compare/v4.2.1...v4.2.2) (2022-10-17)
 
 
