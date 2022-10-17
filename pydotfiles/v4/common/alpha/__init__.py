@@ -2,6 +2,7 @@
 from typing import Dict, Optional
 from dataclasses import dataclass
 from enum import Enum
+from pathlib import Path
 
 # Project imports
 from .os import OperatingSystem, OSName
@@ -85,14 +86,19 @@ class AlphaDeveloperEnvironments(AlphaCommon):
 @dataclass(frozen=True, order=True)
 class AlphaManifest(AlphaCommon):
     profiles: list[Profile]
+    ignore_directories: set[str]
 
     @staticmethod
     def from_dict(data: Dict) -> 'AlphaManifest':
         return AlphaManifest(
             version=data.get("version"),
             schema=data.get("schema"),
-            profiles=Profile.from_dict(data.get("profiles"))
+            profiles=Profile.from_dict(data.get("profiles")),
+            ignore_directories=set() if data.get("ignore_directories") is None else data.get("ignore_directories")
         )
+
+    def get_directories_to_ignore(self, manifest_file_path: Path) -> set[Path]:
+        return {manifest_file_path.parent.joinpath(directory) for directory in self.ignore_directories}
 
 
 def get_schema(schema: str) -> type:

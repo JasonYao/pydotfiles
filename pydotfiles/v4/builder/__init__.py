@@ -43,6 +43,7 @@ class Builder:
         self.core: Dict[Path, AlphaCore] = {}
         self.defined_os: set[OSName] = set()
         self.base_dir = base_dir
+        self.ignore_dirs: set[Path] = set()
 
         for configuration in configurations:
             if isinstance(configuration.data, AlphaCore):
@@ -58,6 +59,7 @@ class Builder:
                     for dependency in profile.dependencies:
                         dependencies.append(dependency)
                 self.profile_file_types[configuration.file_path] = AlphaManifest
+                self.ignore_dirs = configuration.data.get_directories_to_ignore(configuration.file_path) | self.ignore_dirs
             elif isinstance(configuration.data, AlphaDeveloperEnvironments):
                 self.dev_environments[configuration.file_path] = configuration.data
                 self.profile_map[configuration.data.profile].append(configuration.file_path)

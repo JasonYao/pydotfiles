@@ -23,6 +23,12 @@
             "properties": {
                 "profiles": {
                     "$ref": "#/$defs/Profiles"
+                },
+                "ignore_directories": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 }
             },
             "required": ["profiles"]
