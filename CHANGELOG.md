@@ -1,5 +1,12 @@
 # Changelog | Pydotfiles
 
+## [4.2.2](https://github.com/JasonYao/pydotfiles/compare/v4.2.1...v4.2.2) (2022-10-17)
+
+
+### Bug Fixes
+
+* **build:** fixes linux build runner when retrieving macos build options ([7c04f1a](https://github.com/JasonYao/pydotfiles/commit/7c04f1a206f4304d5a5197b691b8685074f5bacb))
+
 ## [4.2.1](https://github.com/JasonYao/pydotfiles/compare/v4.2.0...v4.2.1) (2022-10-17)
 
 
