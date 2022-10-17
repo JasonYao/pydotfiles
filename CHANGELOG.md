@@ -1,5 +1,12 @@
 # Changelog | Pydotfiles
 
+## [4.2.1](https://github.com/JasonYao/pydotfiles/compare/v4.2.0...v4.2.1) (2022-10-17)
+
+
+### Bug Fixes
+
+* **build:** fixes the build command's release flag to work for directories without the output dir ([c14a58a](https://github.com/JasonYao/pydotfiles/commit/c14a58a2eedeae2a8770e8fbc735186783fb8f40))
+
 # [4.2.0](https://github.com/JasonYao/pydotfiles/compare/v4.1.0...v4.2.0) (2022-10-17)
 
 
