@@ -12,6 +12,7 @@ from shutil import copy2 as shutil_copy2
 from shutil import rmtree as shutil_rmtree
 from os import chmod as os_chmod
 from zipfile import ZipFile
+from os.path import join as os_path_join
 
 # Project imports
 from pydotfiles.v4.common import Configuration
@@ -236,8 +237,12 @@ class Builder:
     def __zip_dir(self, directory: Path) -> Path:
         destination = Path(f"{directory}.zip")
         with ZipFile(destination, mode='w') as zip_fp:
-            for content in directory.iterdir():
-                zip_fp.write(content, content.name)
+            for dirpath, dirnames, filenames in os_walk(directory):
+                for filename in filenames:
+                    file_path = Path(os_path_join(dirpath, filename))
+                    archive_file_path = file_path.relative_to(directory)
+                    zip_fp.write(file_path, archive_file_path)
+
         return destination
 
 ##
