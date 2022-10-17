@@ -70,8 +70,9 @@ class Builder:
                 self.profile_file_types[configuration.file_path] = AlphaDefaultSettings
 
     def build(self, profiles: Optional[list[str]], specified_oses: Optional[list[str]]) -> Dict[str, Path]:
-        # Clears out the current build directory
-        shutil_rmtree(self.output_path)
+        # Clears out the current build directory if it already exists
+        if self.output_path.exists():
+            shutil_rmtree(self.output_path)
         self.output_path.mkdir(parents=True, exist_ok=True)
 
         active_profiles = self.__get_active_profiles(profiles)
