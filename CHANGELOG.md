@@ -1,5 +1,12 @@
 # Changelog | Pydotfiles
 
+# [4.1.0](https://github.com/JasonYao/pydotfiles/compare/v4.0.4...v4.1.0) (2022-10-17)
+
+
+### Features
+
+* **build:** adds in the -b or --build-directory flag to the build command to control output ([65736da](https://github.com/JasonYao/pydotfiles/commit/65736da2e8619ad3292548e8f7bb1bce72c0218d)), closes [#84](https://github.com/JasonYao/pydotfiles/issues/84)
+
 ## [4.0.4](https://github.com/JasonYao/pydotfiles/compare/v4.0.3...v4.0.4) (2022-10-17)
 
 
