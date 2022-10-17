@@ -1,5 +1,12 @@
 # Changelog | Pydotfiles
 
+## [4.2.5](https://github.com/JasonYao/pydotfiles/compare/v4.2.4...v4.2.5) (2022-10-17)
+
+
+### Bug Fixes
+
+* **build:** fixes symlinks for generated build packages to point to correct locations ([2059e47](https://github.com/JasonYao/pydotfiles/commit/2059e47540d125a6962fa9a3f0ea5dd0d58ef571))
+
 ## [4.2.4](https://github.com/JasonYao/pydotfiles/compare/v4.2.3...v4.2.4) (2022-10-17)
 
 
