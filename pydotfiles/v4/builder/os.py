@@ -345,5 +345,11 @@ def template_os_default_setting(data: DefaultSettings) -> str:
 
 
 def get_current_mac_version():
+    """
+    This should get ripped out eventually, see https://github.com/JasonYao/pydotfiles/issues/81
+    for more context
+    """
     current_version = mac_ver()[0]
+    if current_version is None:
+        return MacVersion.BIG_SUR
     return MacVersion.from_version(current_version)
