@@ -32,17 +32,17 @@ class Builder:
     without requiring users to commit to a whole dynamically updated ecosystem
     """
 
-    def __init__(self, configurations: list[Configuration], base_dir: Path):
+    def __init__(self, configurations: list[Configuration], base_dir: Path, output_path: Path):
         # Maps from a given profile name to the file paths that are defined there
         self.profile_map: Dict[str, list[Path]] = defaultdict(list)
         self.profile_dependencies: Dict[str, list[str]] = defaultdict(list)
         self.profile_file_types: Dict[Path, type] = {}
-        # self.manifests: Dict[Path, AlphaManifest] = {}
         self.dev_environments: Dict[Path, AlphaDeveloperEnvironments] = {}
         self.default_settings: Dict[Path, AlphaDefaultSettings] = {}
         self.core: Dict[Path, AlphaCore] = {}
         self.defined_os: set[OSName] = set()
         self.base_dir = base_dir
+        self.output_path = output_path
 
         for configuration in configurations:
             if isinstance(configuration.data, AlphaCore):
@@ -52,7 +52,6 @@ class Builder:
                 if configuration.data.os is not None:
                     self.defined_os.add(configuration.data.os.name)
             elif isinstance(configuration.data, AlphaManifest):
-                # self.manifests[configuration.file_path] = configuration.data
                 for profile in configuration.data.profiles:
                     dependencies = self.profile_dependencies[profile.name]
                     for dependency in profile.dependencies:
@@ -129,8 +128,11 @@ class Builder:
         return combined_dependencies
 
     def __build_package(self, build_data: list[Configuration], active_os: OSName, active_profile: str) -> Path:
-        dirpath = Path(mktempdir(None, f"pydotfiles-{datetime.now().isoformat()}-{active_os.value}-{active_profile}-"))
-        # build_data = self.__consolidate_requirements(build_data)
+        dirpath = self.output_path.joinpath(f"dotfiles-{active_os.value}-{active_profile}")
+        dirpath.mkdir(parents=True, exist_ok=True)
+
+        # The following line when uncommented will write to a temp directory instead
+        # dirpath = Path(mktempdir(None, f"pydotfiles-{datetime.now().isoformat()}-{active_os.value}-{active_profile}-"))
 
         is_installation_init_written = False
         for build_datum in build_data:
