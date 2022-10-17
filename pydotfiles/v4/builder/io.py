@@ -96,7 +96,7 @@ def template_symlink_file(symlink: Symlink) -> str:
     if [[ -L {destination} ]]; then
         info "Symlink: File already exists in {destination}"
     else
-        if {'sudo ' if symlink.is_sudo else ''}mkdir -p {destination.parent} && {'sudo ' if symlink.is_sudo else ''}ln -s {'' if symlink.initial_origin_file is None else '${pwd}/'}{origin} {destination} ; then
+        if {'sudo ' if symlink.is_sudo else ''}mkdir -p {destination.parent} && {'sudo ' if symlink.is_sudo else ''}ln -s {'' if symlink.initial_origin_file is None else '$(pwd)/'}{origin} {destination} ; then
             success "Symlink: Successfully symlinked {origin} to {destination}"
         else
             fail "Symlink: Failed to symlink {origin} to {destination}"
