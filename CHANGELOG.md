@@ -1,5 +1,12 @@
 # Changelog | Pydotfiles
 
+## [4.0.4](https://github.com/JasonYao/pydotfiles/compare/v4.0.3...v4.0.4) (2022-10-17)
+
+
+### Bug Fixes
+
+* **linux:** fixes build command for linux build runners when generating macos build packages ([d716993](https://github.com/JasonYao/pydotfiles/commit/d716993a9eed351df93947ca0ca6df421b9d1d9a))
+
 ## [4.0.3](https://github.com/JasonYao/pydotfiles/compare/v4.0.2...v4.0.3) (2022-10-16)
 
 
