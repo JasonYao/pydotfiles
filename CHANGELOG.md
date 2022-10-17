@@ -1,5 +1,12 @@
 # Changelog | Pydotfiles
 
+# [4.2.0](https://github.com/JasonYao/pydotfiles/compare/v4.1.0...v4.2.0) (2022-10-17)
+
+
+### Features
+
+* **build:** adds in the -r or --release flag to the build command, which zips up build packages ([5367eaf](https://github.com/JasonYao/pydotfiles/commit/5367eaf635bd990d5dd42d1859939c67e1a75bd7)), closes [#85](https://github.com/JasonYao/pydotfiles/issues/85)
+
 # [4.1.0](https://github.com/JasonYao/pydotfiles/compare/v4.0.4...v4.1.0) (2022-10-17)
 
 
