@@ -75,6 +75,7 @@ class ArgumentDispatcherFacade:
         parser = self.__get_base_parser(help_description, "build")
         parser.add_argument("-d", "--directory", help="Builds all/indicated profile build packages located in the passed-in directory. Defaults to the current working directory", default=getcwd())
         parser.add_argument("-b", "--build-directory", help="The output directory. Defaults to pydotfiles-build in the current working directory", default=str(Path(getcwd()).joinpath("pydotfiles-build")))
+        parser.add_argument("-r", "--release", help="Will generate releases (.zip) of each of the build files", action="store_true")
 
         parser.add_argument("-p", "--profiles", nargs='+', help="Indicates which profiles should be built, and how they should be composed. Defaults to all profiles being built independently")
         parser.add_argument("-o", "--operating-systems", nargs='+', help="Indicates which operating system build packages should be built. Defaults to all profiles being built independently")
@@ -85,7 +86,7 @@ class ArgumentDispatcherFacade:
 
         configurations = load_configuration(Path(args.directory))
 
-        builder = Builder(configurations, Path(args.directory), Path(args.build_directory))
+        builder = Builder(configurations, Path(args.directory), Path(args.build_directory), args.release)
         build_packages = builder.build(args.profiles, args.operating_systems)
         for name, build_package_path in build_packages.items():
             PrettyPrint.success(f"[{name}]\tSuccessfully generated build package in: {build_package_path}")

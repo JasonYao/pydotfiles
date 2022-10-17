@@ -9,7 +9,9 @@ from os import walk as os_walk
 from os import path as os_path
 from dataclasses import dataclass
 from shutil import copy2 as shutil_copy2
+from shutil import rmtree as shutil_rmtree
 from os import chmod as os_chmod
+from zipfile import ZipFile
 
 # Project imports
 from pydotfiles.v4.common import Configuration
@@ -32,7 +34,7 @@ class Builder:
     without requiring users to commit to a whole dynamically updated ecosystem
     """
 
-    def __init__(self, configurations: list[Configuration], base_dir: Path, output_path: Path):
+    def __init__(self, configurations: list[Configuration], base_dir: Path, output_path: Path, is_release: bool):
         # Maps from a given profile name to the file paths that are defined there
         self.profile_map: Dict[str, list[Path]] = defaultdict(list)
         self.profile_dependencies: Dict[str, list[str]] = defaultdict(list)
@@ -43,6 +45,7 @@ class Builder:
         self.defined_os: set[OSName] = set()
         self.base_dir = base_dir
         self.output_path = output_path
+        self.is_release = is_release
 
         for configuration in configurations:
             if isinstance(configuration.data, AlphaCore):
@@ -67,6 +70,10 @@ class Builder:
                 self.profile_file_types[configuration.file_path] = AlphaDefaultSettings
 
     def build(self, profiles: Optional[list[str]], specified_oses: Optional[list[str]]) -> Dict[str, Path]:
+        # Clears out the current build directory
+        shutil_rmtree(self.output_path)
+        self.output_path.mkdir(parents=True, exist_ok=True)
+
         active_profiles = self.__get_active_profiles(profiles)
         package_paths: Dict[str, Path] = {}
 
@@ -143,6 +150,9 @@ class Builder:
                 is_installation_init_written = True
             package_builder.build()
             package_builder.write_tail()
+
+            if self.is_release:
+                self.__zip_dir(dirpath)
         return dirpath
 
     def __consolidate_requirements(self, build_data: list[Configuration]) -> list[Configuration]:
@@ -220,6 +230,13 @@ class Builder:
             file_path=build_data[0].file_path,
             data=AlphaCore.from_dict(consolidated_data)
         )
+
+    def __zip_dir(self, directory: Path) -> Path:
+        destination = Path(f"{directory}.zip")
+        with ZipFile(destination, mode='w') as zip_fp:
+            for content in directory.iterdir():
+                zip_fp.write(content, content.name)
+        return destination
 
 ##
 # Build package methods
