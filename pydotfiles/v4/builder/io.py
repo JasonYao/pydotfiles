@@ -9,6 +9,7 @@ from logging import getLogger
 from pydotfiles.v4.builder.environment import template_dev_env_manager_installation, \
     template_dev_env_manager_plugins_installation, template_dev_env_manager_version_installation
 from pydotfiles.v4.common.alpha import Environment, OSName
+from .common import Symlink
 
 logger = getLogger(__name__)
 
@@ -82,18 +83,20 @@ def template_copy_file(origin: Path, destination: Path) -> str:
     """
 
 
-def template_symlink_file(origin: Path, destination: Path, use_sudo: bool) -> str:
+def template_symlink_file(symlink: Symlink) -> str:
     """
     Returns the equivalent bash command in order to symlink a file
     NOTE: origin is a _relative_ path from the root of the dotfiles directory
     NOTE: destination is an _absolute_ path
     """
+    origin = symlink.script_origin_file
+    destination = symlink.script_destination_file
 
     return f"""
     if [[ -L {destination} ]]; then
         info "Symlink: File already exists in {destination}"
     else
-        if {'sudo ' if use_sudo else ''}mkdir -p {destination.parent} && {'sudo ' if use_sudo else ''}ln -s {origin} {destination} ; then    
+        if {'sudo ' if symlink.is_sudo else ''}mkdir -p {destination.parent} && {'sudo ' if symlink.is_sudo else ''}ln -s {'' if symlink.initial_origin_file is None else '${pwd}/'}{origin} {destination} ; then
             success "Symlink: Successfully symlinked {origin} to {destination}"
         else
             fail "Symlink: Failed to symlink {origin} to {destination}"

@@ -20,6 +20,7 @@ from pydotfiles.v4.common.alpha import AlphaManifest, AlphaCore, AlphaDefaultSet
 from pydotfiles.v4.common.alpha.action import Action
 from .io import template_run_script, template_copy_file, template_symlink_file, template_starter_helper_functions, template_dev_environment_setup
 from .os import template_os_packages, template_os_applications, template_os_default_dock, template_os_default_setting_files
+from .common import Copy, Symlink, RunScript
 
 logger = getLogger(__name__)
 
@@ -242,34 +243,6 @@ class Builder:
 ##
 # Build package methods
 ##
-
-
-@dataclass(frozen=True, order=True)
-class Symlink:
-    initial_origin_file: Path
-    destination_in_build_package: Path
-    script_origin_file: Path
-    script_destination_file: Path
-    is_sudo: bool
-
-
-@dataclass(frozen=True, order=True)
-class Copy:
-    initial_origin_file: Path
-    destination_in_build_package: Path
-    script_origin_file: Path
-    script_destination_file: Path
-    is_sudo: bool
-
-
-@dataclass(frozen=True, order=True)
-class RunScript:
-    initial_origin_file: Path
-    destination_in_build_package: Path
-    script_origin_file: Path
-    # No need for script destination file since the command is just being executed,
-    # and not copied or symlinked elsewhere
-    is_sudo: bool
 
 
 class PackageBuilder:
@@ -511,7 +484,7 @@ class PackageBuilder:
     def __add_symlink_instruction_to_install_script(self, symlinks: set[Symlink]) -> None:
         symlink_instruction = ""
         for symlink in symlinks:
-            symlink_instruction += template_symlink_file(symlink.script_origin_file, symlink.script_destination_file, symlink.is_sudo)
+            symlink_instruction += template_symlink_file(symlink)
         with self.installation_script.open('a') as install_fp:
             install_fp.write(symlink_instruction)
 
