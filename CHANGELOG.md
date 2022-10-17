@@ -1,5 +1,12 @@
 # Changelog | Pydotfiles
 
+## [4.2.4](https://github.com/JasonYao/pydotfiles/compare/v4.2.3...v4.2.4) (2022-10-17)
+
+
+### Bug Fixes
+
+* **zip:** fixes released zip files to properly include subdirectory files ([c8cd39d](https://github.com/JasonYao/pydotfiles/commit/c8cd39d7c57f81194da0993cdd7f1660d0956e63))
+
 ## [4.2.3](https://github.com/JasonYao/pydotfiles/compare/v4.2.2...v4.2.3) (2022-10-17)
 
 
