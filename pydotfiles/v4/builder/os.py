@@ -350,6 +350,6 @@ def get_current_mac_version():
     for more context
     """
     current_version = mac_ver()[0]
-    if current_version is None:
+    if current_version == '':
         return MacVersion.BIG_SUR
     return MacVersion.from_version(current_version)
