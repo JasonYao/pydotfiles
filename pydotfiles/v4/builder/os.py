@@ -9,6 +9,7 @@ from pydotfiles.v4.common.alpha.os import PackageManager, OperatingSystem
 
 logger = getLogger(__name__)
 
+
 ##
 # OS packages installation
 ##
@@ -217,6 +218,7 @@ def __template_apt_applications(data: OperatingSystem) -> str:
     logger.error("TODO: Implement template apt applications")
     return ""
 
+
 ##
 # OS default dock
 ##
@@ -238,13 +240,20 @@ def template_os_default_dock(data: OperatingSystem) -> str:
 
     """
 
+    system_applications = {"Launchpad", "Notes", "Music", "App Store", "System Preferences"}.intersection(
+        set(data.default_dock))
+
+    user_applications = set(data.default_dock) - system_applications
+
+    valid_applications = "\" \"".join(data.default_dock)
+
     valid_apps = f"""
     # Apps that you want included in the default dock
-    valid_apps=("launchpad" "Notes" "iTunes" "appstore" "systempreferences" "firefox")
+    valid_apps=("{valid_applications}")
     """
 
-    dock_setting_function = r"""
-    function check_and_manage_dock_apps() {
+    user_application_dock_setting_function = r"""
+    function check_and_manage_dock_user_apps() {
         app_name=$1
         if [[ $(defaults read com.apple.Dock persistent-apps | grep "${app_name}") == "" ]]; then
             info "Dock: ${app_name} is not set on the dock, setting now"
@@ -258,12 +267,31 @@ def template_os_default_dock(data: OperatingSystem) -> str:
 
     """
 
+    system_application_dock_setting_function = r"""
+    function check_and_manage_dock_system_apps() {
+        app_name=$1
+        if [[ $(defaults read com.apple.Dock persistent-apps | grep "${app_name}") == "" ]]; then
+            info "Dock: ${app_name} is not set on the dock, setting now"
+            defaults write com.apple.dock persistent-apps -array-add \
+                "<dict><key>tile-data</key><dict><key>file-data</key><dict><key>_CFURLString</key><string>/System/Applications/$1.app</string><key>_CFURLStringType</key><integer>0</integer></dict></dict></dict>"
+            success "Dock: ${app_name} is now set on the dock"
+        else
+            success "Dock: ${app_name} is already set on the dock"
+        fi
+    }
+
+    """
+
     repopulate_function = """
     function repopulate_all_dock_apps() {
     """
 
-    for default_dock_item in data.default_dock:
-        repopulate_function += f"""check_and_manage_dock_apps "{default_dock_item}"
+    for default_dock_system_application in system_applications:
+        repopulate_function += f"""check_and_manage_dock_system_apps "{default_dock_system_application}"
+        """
+
+    for default_dock_user_application in user_applications:
+        repopulate_function += f"""check_and_manage_dock_user_apps "{default_dock_user_application}"
         """
 
     repopulate_function += """
@@ -271,7 +299,7 @@ def template_os_default_dock(data: OperatingSystem) -> str:
     }
     """
 
-    return header + valid_apps + dock_setting_function + repopulate_function + r"""
+    return header + valid_apps + user_application_dock_setting_function + system_application_dock_setting_function + repopulate_function + r"""
     # Does this once instead of doing all over each time
     invert_string="grep -v"
 
@@ -280,7 +308,7 @@ def template_os_default_dock(data: OperatingSystem) -> str:
     done
 
     function check_and_remove_bad_dock_apps() {
-        if [[ $(defaults read com.apple.Dock persistent-apps | grep "bundle-identifier" | eval "$invert_string") != "" ]]; then
+        if [[ $(defaults read com.apple.Dock persistent-apps | grep "file-label" | eval "$invert_string") != "" ]]; then
             info "Dock: Contains non-default applications, killing off now"
             defaults delete com.apple.Dock persistent-apps
             killall Dock
@@ -325,11 +353,11 @@ def template_os_default_setting(data: DefaultSettings) -> str:
     """
 
     command_check = f"""
-    {f'if [[ $({data.check_command}) == "{data.expected_check_state}" ]]; then' if data.check_output else ''}
+    {f'if [[ "$({"sudo " if data.sudo else ""}{raw_string(data.check_command)})" == "{data.expected_check_state}" ]]; then' if data.check_output else ''}    
     {f'    success "{data.name}: Successfully completed previously"' if data.check_output else ''}
     {f'else' if data.check_output else ''}
 
-    {f'    if {"sudo " if data.sudo else ""}{data.command} ; then'}
+    {f'    if {"sudo " if data.sudo else ""}{raw_string(data.command)} ; then'}
     {f'        success "{data.name}: Successfully executed command"'}    
     {f'        {"" if data.post_command is None else data.post_command}'}
     {f'    else'}
@@ -339,6 +367,10 @@ def template_os_default_setting(data: DefaultSettings) -> str:
     {f'fi' if data.check_output else ''}
     """
     return info_message + command_check
+
+
+def raw_string(data: str) -> str:
+    return data.replace("\n", r"\n")
 
 
 def get_current_mac_version():
