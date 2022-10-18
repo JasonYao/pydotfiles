@@ -1,5 +1,12 @@
 # Changelog | Pydotfiles
 
+## [4.2.7](https://github.com/JasonYao/pydotfiles/compare/v4.2.6...v4.2.7) (2022-10-18)
+
+
+### Bug Fixes
+
+* **dock:** fixes dock to allow default dock settings to be applied correctly ([0f2e4e6](https://github.com/JasonYao/pydotfiles/commit/0f2e4e6aaa50ef262ac9507479205b02c35b5e8c))
+
 ## [4.2.6](https://github.com/JasonYao/pydotfiles/compare/v4.2.5...v4.2.6) (2022-10-18)
 
 
