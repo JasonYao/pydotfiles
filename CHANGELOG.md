@@ -1,5 +1,12 @@
 # Changelog | Pydotfiles
 
+## [4.2.6](https://github.com/JasonYao/pydotfiles/compare/v4.2.5...v4.2.6) (2022-10-18)
+
+
+### Bug Fixes
+
+* **macos:** fixes an issue when re-running a build package script with mktemp ([6ddc243](https://github.com/JasonYao/pydotfiles/commit/6ddc243ddd8a5f7b2a8f591883d3295a8c966492))
+
 ## [4.2.5](https://github.com/JasonYao/pydotfiles/compare/v4.2.4...v4.2.5) (2022-10-17)
 
 
