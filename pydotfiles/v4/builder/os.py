@@ -40,9 +40,6 @@ def __template_homebrew_packages(data: OperatingSystem) -> str:
     # away, and we rely instead on gnubin as written here: https://stackoverflow.com/a/60063337
 
     tmp_homebrew_cache_file=/tmp/pydotfiles-homebrew-cache
-    if [[ ! -f /tmp/pydotfiles-homebrew-cache ]]; then
-        tmp_homebrew_cache_file=$(mktemp /tmp/pydotfiles-homebrew-cache)
-    fi
     
     # chown's the homebrew /usr/local directory since otherwise this issue pops up:
     # https://github.com/Homebrew/legacy-homebrew/issues/44938
