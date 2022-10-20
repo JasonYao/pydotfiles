@@ -1,5 +1,12 @@
 # Changelog | Pydotfiles
 
+## [4.2.8](https://github.com/JasonYao/pydotfiles/compare/v4.2.7...v4.2.8) (2022-10-20)
+
+
+### Bug Fixes
+
+* **mac:** adds in support for dealing with whitespace in paths for mac ([6e2e1a7](https://github.com/JasonYao/pydotfiles/commit/6e2e1a73fd77777c824938e101746c4f6d137af7))
+
 ## [4.2.7](https://github.com/JasonYao/pydotfiles/compare/v4.2.6...v4.2.7) (2022-10-18)
 
 
