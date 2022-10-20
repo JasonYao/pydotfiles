@@ -69,15 +69,18 @@ def template_copy_file(origin: Path, destination: Path) -> str:
     NOTE: destination is an _absolute_ path
     NOTE: We removed sudo ability here, but can re-add it in if necessary
     """
+    escaped_origin = escape_path(origin)
+    escaped_destination = escape_path(destination)
+    escaped_destination_parent = escape_path(destination.parent)
 
     return f"""
-    if [[ -f {destination} ]]; then
-        info "Copy: File already exists in {destination}"
+    if [[ -f {escaped_destination} ]]; then
+        info "Copy: File already exists in {escaped_destination}"
     else
-        if mkdir -p {destination.parent} && cp {origin} {destination} ; then
-            success "Copy: Successfully copied file {origin} to {destination}"
+        if mkdir -p {escaped_destination_parent} && cp {escaped_origin} {escaped_destination} ; then
+            success "Copy: Successfully copied file {escaped_origin} to {escaped_destination}"
         else
-            fail "Copy: Failed to copy file {origin} to {destination}"
+            fail "Copy: Failed to copy file {escaped_origin} to {escaped_destination}"
         fi
     fi
     """
@@ -90,16 +93,18 @@ def template_symlink_file(symlink: Symlink) -> str:
     NOTE: destination is an _absolute_ path
     """
     origin = symlink.script_origin_file
+    escaped_origin = escape_path(origin)
     destination = symlink.script_destination_file
+    escaped_destination = escape_path(destination)
 
     return f"""
-    if [[ -L {destination} ]]; then
-        info "Symlink: File already exists in {destination}"
+    if [[ -L {escaped_destination} ]]; then
+        info "Symlink: File already exists in {escaped_destination}"
     else
-        if {'sudo ' if symlink.is_sudo else ''}mkdir -p {destination.parent} && {'sudo ' if symlink.is_sudo else ''}ln -s {'' if symlink.initial_origin_file is None else '$(pwd)/'}{origin} {destination} ; then
-            success "Symlink: Successfully symlinked {origin} to {destination}"
+        if {'sudo ' if symlink.is_sudo else ''}mkdir -p {destination.parent} && {'sudo ' if symlink.is_sudo else ''}ln -s {'' if symlink.initial_origin_file is None else '$(pwd)/'}{escaped_origin} {escaped_destination} ; then
+            success "Symlink: Successfully symlinked {escaped_origin} to {escaped_destination}"
         else
-            fail "Symlink: Failed to symlink {origin} to {destination}"
+            fail "Symlink: Failed to symlink {escaped_origin} to {escaped_destination}"
         fi
     fi
     """
@@ -109,6 +114,7 @@ def template_run_script(script: Path, use_sudo: bool) -> str:
     """
     Returns the equivalent bash command in order to copy a file
     """
+    script = escape_path(script)
     return f"""
     if {'sudo ' if use_sudo else ''}{script}; then
         success "Script file: {script} executed successfully"
@@ -121,6 +127,9 @@ def template_run_script(script: Path, use_sudo: bool) -> str:
 ##
 # Utility functions
 ##
+
+def escape_path(some_path: Path) -> str:
+    return str(some_path).replace(" ", "\\ ")
 
 
 def is_moved(origin: Path, destination: Path) -> bool:
